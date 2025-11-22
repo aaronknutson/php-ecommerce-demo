@@ -63,7 +63,7 @@ export default function Login({
                             <div className="flex-1 min-w-0">
                                 <p className="text-xs font-semibold mb-1">Customer Account</p>
                                 <div className="text-xs space-y-0.5">
-                                    <p className="font-mono break-all">mherman@example.com</p>
+                                    <p className="font-mono break-all">customer@techhub.com</p>
                                     <p className="font-mono">password</p>
                                 </div>
                             </div>
