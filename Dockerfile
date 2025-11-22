@@ -15,6 +15,7 @@ RUN apk add --no-cache \
     mysql-client \
     nginx \
     supervisor \
+    netcat-openbsd \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Install Composer
