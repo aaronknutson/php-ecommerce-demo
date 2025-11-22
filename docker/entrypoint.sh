@@ -64,8 +64,14 @@ echo "MySQL is up - executing migrations and seeding"
 # Run migrations
 php artisan migrate --force --no-interaction
 
-# Seed the database with demo data
-php artisan db:seed --force --no-interaction
+# Only seed if database is empty (check if users table has no records)
+USER_COUNT=$(php artisan tinker --execute="echo App\Models\User::count();")
+if [ "$USER_COUNT" -eq 0 ]; then
+    echo "Database is empty, seeding with demo data..."
+    php artisan db:seed --force --no-interaction
+else
+    echo "Database already seeded (found $USER_COUNT users), skipping seed..."
+fi
 
 echo "Database setup complete!"
 
