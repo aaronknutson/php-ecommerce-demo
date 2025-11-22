@@ -17,8 +17,8 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN npm ci
 
-# Generate Wayfinder routes and build assets
-RUN php artisan wayfinder:generate
+# Generate Wayfinder routes with form variants and build assets
+RUN php artisan wayfinder:generate --with-form
 RUN npm run build
 
 # Production stage
