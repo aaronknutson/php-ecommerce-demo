@@ -92,41 +92,32 @@ Built with Laravel 12, React 19, and Inertia.js v2, TechHub Electronics demonstr
     cp .env.example .env
     ```
 
-3. **Start Docker containers**
+3. **Generate application key**
+
+    ```bash
+    # Generate the Laravel application key
+    docker-compose run --rm app php artisan key:generate
+    ```
+
+4. **Start Docker containers**
 
     ```bash
     docker-compose up -d
     ```
 
-4. **Install dependencies**
+    The application container will automatically:
+    - Wait for MySQL to be ready
+    - Run database migrations
+    - Seed the database with demo data (products, categories, users, orders)
+    - Start the PHP-FPM service
 
-    ```bash
-    # Install PHP dependencies
-    docker-compose exec app composer install
-
-    # Install Node dependencies
-    docker-compose exec node npm install
-    ```
-
-5. **Generate application key**
-
-    ```bash
-    docker-compose exec app php artisan key:generate
-    ```
-
-6. **Run migrations and seed database**
-
-    ```bash
-    docker-compose exec app php artisan migrate:fresh --seed
-    ```
-
-7. **Build frontend assets**
+5. **Build frontend assets**
 
     ```bash
     docker-compose exec node npm run build
     ```
 
-8. **Access the application**
+6. **Access the application**
     - Frontend: http://localhost
     - Vite Dev Server: http://localhost:5173
 
@@ -245,12 +236,14 @@ docker-compose exec app php artisan migrate:fresh --seed
 
 ## Docker Services
 
-| Service | Port | Description     |
-| ------- | ---- | --------------- |
-| Nginx   | 80   | Web server      |
-| PHP-FPM | 9000 | PHP processor   |
-| MySQL   | 3306 | Database        |
-| Node    | 5173 | Vite dev server |
+| Service | Port | Description                                     |
+| ------- | ---- | ----------------------------------------------- |
+| Nginx   | 80   | Web server                                      |
+| PHP-FPM | 9000 | PHP processor (auto-runs migrations & seeding) |
+| MySQL   | 3306 | Database                                        |
+| Node    | 5173 | Vite dev server                                 |
+
+**Note:** The PHP-FPM container automatically runs database migrations and seeds demo data on startup, ensuring the database is ready to use immediately.
 
 ## API Endpoints
 

@@ -26,14 +26,18 @@ RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
     && chmod -R 755 /var/www/bootstrap/cache
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install PHP dependencies (including dev dependencies for seeding)
+RUN composer install --optimize-autoloader --no-interaction
+
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=30s --retries=3 \
     CMD pgrep -f "php-fpm: master" || exit 1
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
 
-CMD ["php-fpm"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
