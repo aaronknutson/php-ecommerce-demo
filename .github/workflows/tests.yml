@@ -44,7 +44,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Generate Wayfinder Routes
-        run: php artisan wayfinder:generate
+        run: php artisan wayfinder:generate --with-form
 
       - name: Build Assets
         run: npm run build
