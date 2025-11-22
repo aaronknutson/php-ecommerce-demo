@@ -1,3 +1,27 @@
+# Build stage for frontend assets
+FROM php:8.3-cli-alpine AS frontend-builder
+
+WORKDIR /app
+
+# Install Node.js and PHP extensions needed for build
+RUN apk add --no-cache nodejs npm \
+    && docker-php-ext-install pdo_mysql
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy application files
+COPY . .
+
+# Install PHP and Node dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN npm ci
+
+# Generate Wayfinder routes and build assets
+RUN php artisan wayfinder:generate
+RUN npm run build
+
+# Production stage
 FROM php:8.3-fpm-alpine
 
 # Set working directory
@@ -23,6 +47,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy application files
 COPY . /var/www
+
+# Copy built frontend assets from builder
+COPY --from=frontend-builder /app/public/build /var/www/public/build
 
 # Copy NGINX configuration
 COPY docker/nginx/nginx.conf /etc/nginx/http.d/default.conf
