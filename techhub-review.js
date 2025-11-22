@@ -38,15 +38,15 @@ try {
   try {
     await page.goto('http://localhost/shop', { waitUntil: 'networkidle' });
     await takeScreenshot('shop_page');
-  } catch (e) {
-    console.log('Shop page not accessible:', e.message);
+  } catch {
+    console.log('Shop page not accessible');
   }
 
   console.log('3. Visiting Product Details...');
   try {
     await page.goto('http://localhost/products/1', { waitUntil: 'networkidle' });
     await takeScreenshot('product_details');
-  } catch (e) {
+  } catch {
     console.log('Product details not accessible');
   }
 
@@ -54,7 +54,7 @@ try {
   try {
     await page.goto('http://localhost/cart', { waitUntil: 'networkidle' });
     await takeScreenshot('cart_page');
-  } catch (e) {
+  } catch {
     console.log('Cart page not accessible');
   }
 
@@ -62,7 +62,7 @@ try {
   try {
     await page.goto('http://localhost/login', { waitUntil: 'networkidle' });
     await takeScreenshot('login_page');
-  } catch (e) {
+  } catch {
     console.log('Login page not accessible');
   }
 
@@ -70,7 +70,7 @@ try {
   try {
     await page.goto('http://localhost/register', { waitUntil: 'networkidle' });
     await takeScreenshot('register_page');
-  } catch (e) {
+  } catch {
     console.log('Register page not accessible');
   }
 

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Form } from '@inertiajs/react';
-import { Package, CreditCard, MapPin } from 'lucide-react';
+import { CreditCard, MapPin } from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -49,7 +49,7 @@ interface Props {
     addresses: Address[];
 }
 
-export default function Index({ cartItems, subtotal, tax, shipping, total, addresses }: Props) {
+export default function Index({ cartItems, subtotal, tax, shipping, total }: Props) {
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -63,7 +63,7 @@ export default function Index({ cartItems, subtotal, tax, shipping, total, addre
                 <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
                 <Form action="/checkout" method="post">
-                    {({ errors, hasErrors, processing, wasSuccessful }) => (
+                    {({ errors, processing }) => (
                         <div className="grid lg:grid-cols-3 gap-8">
                             {/* Checkout Form */}
                             <div className="lg:col-span-2 space-y-6">

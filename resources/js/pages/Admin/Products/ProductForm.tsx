@@ -29,7 +29,7 @@ interface Product {
 interface Props {
     categories: Category[];
     product?: Product;
-    onSubmit: (data: any) => void;
+    onSubmit: (data: Record<string, unknown>) => void;
     isSubmitting: boolean;
 }
 

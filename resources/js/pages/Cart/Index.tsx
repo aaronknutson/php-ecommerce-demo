@@ -1,7 +1,6 @@
 import StoreLayout from '@/layouts/store-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Link, router } from '@inertiajs/react';
 import { Package, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useState } from 'react';

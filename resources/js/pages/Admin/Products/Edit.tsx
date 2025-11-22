@@ -32,7 +32,7 @@ interface Props {
 export default function Edit({ product, categories }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (data: any) => {
+    const handleSubmit = (data: Record<string, unknown>) => {
         setIsSubmitting(true);
         router.put(`/admin/products/${product.id}`, data, {
             onFinish: () => setIsSubmitting(false),

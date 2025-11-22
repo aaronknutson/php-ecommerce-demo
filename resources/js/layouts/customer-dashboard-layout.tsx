@@ -1,8 +1,7 @@
 import { StoreNavbar } from '@/components/store-navbar';
 import { Link, usePage } from '@inertiajs/react';
-import { User, Package, Settings, ShoppingBag, MapPin } from 'lucide-react';
+import { User, Settings, ShoppingBag, MapPin } from 'lucide-react';
 import { type ReactNode } from 'react';
-import type { SharedData } from '@/types';
 
 interface CustomerDashboardLayoutProps {
     children: ReactNode;

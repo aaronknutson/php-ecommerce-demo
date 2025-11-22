@@ -16,7 +16,7 @@ interface Props {
 export default function Create({ categories }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (data: any) => {
+    const handleSubmit = (data: Record<string, unknown>) => {
         setIsSubmitting(true);
         router.post('/admin/products', data, {
             onFinish: () => setIsSubmitting(false),
