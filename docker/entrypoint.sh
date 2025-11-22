@@ -3,7 +3,8 @@
 set -e
 
 echo "Waiting for MySQL to be ready..."
-until php artisan db:show 2>/dev/null | grep -q "mysql"; do
+# Use native MySQL client for faster connection check
+until mysqladmin ping -h"${DB_HOST}" -u"${DB_USERNAME}" -p"${DB_PASSWORD}" --silent 2>/dev/null; do
     echo "MySQL is unavailable - sleeping"
     sleep 2
 done
@@ -18,5 +19,5 @@ php artisan db:seed --force --no-interaction
 
 echo "Database setup complete!"
 
-# Start PHP-FPM
-exec php-fpm
+# Start supervisor to manage NGINX and PHP-FPM
+exec /usr/bin/supervisord -c /etc/supervisord.conf
