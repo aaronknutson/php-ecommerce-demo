@@ -46,7 +46,7 @@ services:
     container_name: ecommerce-mysql
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "3307:3306"  # Use 3307 on host to avoid conflicts with existing MySQL
     environment:
       MYSQL_DATABASE: ecommerce
       MYSQL_USER: ecommerce_user
