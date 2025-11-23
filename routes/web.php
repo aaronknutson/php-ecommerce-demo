@@ -25,7 +25,13 @@ Route::delete('cart/{cartItem}', [CartController::class, 'destroy'])->name('cart
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        $user = auth()->user();
+
+        if ($user && $user->role === 'admin') {
+            return redirect('/admin');
+        }
+
+        return redirect('/settings/profile');
     })->name('dashboard');
 
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
