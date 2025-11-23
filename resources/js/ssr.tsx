@@ -3,13 +3,16 @@ import createServer from '@inertiajs/react/server';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import ReactDOMServer from 'react-dom/server';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 createServer((page) =>
     createInertiaApp({
         page,
         render: ReactDOMServer.renderToString,
-        title: (title) => (title ? `${title} - ${appName}` : appName),
+        title: (title) => {
+            // Use runtime app name from Inertia shared props (set in HandleInertiaRequests)
+            // This ensures the app name comes from APP_NAME env var at runtime, not build time
+            const appName = page.props?.name || 'Laravel';
+            return title ? `${title} - ${appName}` : appName;
+        },
         resolve: (name) =>
             resolvePageComponent(
                 `./pages/${name}.tsx`,

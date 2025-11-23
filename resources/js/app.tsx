@@ -6,10 +6,14 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => {
+        // Use runtime app name from Inertia shared props (set in HandleInertiaRequests)
+        // This ensures the app name comes from APP_NAME env var at runtime, not build time
+        const page = document.getElementById('app')?.dataset.page;
+        const appName = page ? JSON.parse(page).props?.name || 'Laravel' : 'Laravel';
+        return title ? `${title} - ${appName}` : appName;
+    },
     resolve: (name) =>
         resolvePageComponent(
             `./pages/${name}.tsx`,
