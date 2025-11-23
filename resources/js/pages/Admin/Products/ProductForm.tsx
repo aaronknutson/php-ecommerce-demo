@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useForm } from '@inertiajs/react';
+import { X, Plus } from 'lucide-react';
 
 interface Category {
     id: number;
@@ -22,6 +23,8 @@ interface Product {
     price: number;
     compare_price?: number;
     stock: number;
+    primary_image?: string;
+    images?: string[];
     is_active: boolean;
     is_featured: boolean;
 }
@@ -43,6 +46,8 @@ export default function ProductForm({ categories, product, onSubmit, isSubmittin
         price: product?.price || '',
         compare_price: product?.compare_price || '',
         stock: product?.stock || 0,
+        primary_image: product?.primary_image || '',
+        images: product?.images || [],
         is_active: product?.is_active ?? true,
         is_featured: product?.is_featured ?? false,
     });
@@ -50,6 +55,21 @@ export default function ProductForm({ categories, product, onSubmit, isSubmittin
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(data);
+    };
+
+    const addImageUrl = () => {
+        setData('images', [...data.images, '']);
+    };
+
+    const removeImageUrl = (index: number) => {
+        const newImages = data.images.filter((_, i) => i !== index);
+        setData('images', newImages);
+    };
+
+    const updateImageUrl = (index: number, value: string) => {
+        const newImages = [...data.images];
+        newImages[index] = value;
+        setData('images', newImages);
     };
 
     return (
@@ -189,6 +209,84 @@ export default function ProductForm({ categories, product, onSubmit, isSubmittin
                 {errors.description && (
                     <p className="text-sm text-destructive">{errors.description}</p>
                 )}
+            </div>
+
+            {/* Primary Image */}
+            <div className="space-y-2">
+                <Label htmlFor="primary_image">Primary Image URL</Label>
+                <Input
+                    id="primary_image"
+                    type="url"
+                    value={data.primary_image}
+                    onChange={(e) => setData('primary_image', e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                />
+                {errors.primary_image && (
+                    <p className="text-sm text-destructive">{errors.primary_image}</p>
+                )}
+                {data.primary_image && (
+                    <div className="mt-2">
+                        <img
+                            src={data.primary_image}
+                            alt="Primary preview"
+                            className="h-32 w-32 rounded-lg border object-cover"
+                            onError={(e) => {
+                                e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="128" height="128"%3E%3Crect fill="%23ddd" width="128" height="128"/%3E%3Ctext x="50%25" y="50%25" font-size="14" text-anchor="middle" dy=".3em" fill="%23999"%3EInvalid URL%3C/text%3E%3C/svg%3E';
+                            }}
+                        />
+                    </div>
+                )}
+            </div>
+
+            {/* Additional Images */}
+            <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                    <Label>Additional Images</Label>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={addImageUrl}
+                        className="gap-2"
+                    >
+                        <Plus className="h-4 w-4" />
+                        Add Image
+                    </Button>
+                </div>
+                <div className="space-y-3">
+                    {data.images.map((imageUrl, index) => (
+                        <div key={index} className="flex gap-2">
+                            <div className="flex-1">
+                                <Input
+                                    type="url"
+                                    value={imageUrl}
+                                    onChange={(e) => updateImageUrl(index, e.target.value)}
+                                    placeholder="https://example.com/image.jpg"
+                                />
+                                {imageUrl && (
+                                    <img
+                                        src={imageUrl}
+                                        alt={`Preview ${index + 1}`}
+                                        className="mt-2 h-24 w-24 rounded border object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="96" height="96"%3E%3Crect fill="%23ddd" width="96" height="96"/%3E%3Ctext x="50%25" y="50%25" font-size="12" text-anchor="middle" dy=".3em" fill="%23999"%3EInvalid%3C/text%3E%3C/svg%3E';
+                                        }}
+                                    />
+                                )}
+                            </div>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                onClick={() => removeImageUrl(index)}
+                                className="shrink-0"
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+                {errors.images && <p className="text-sm text-destructive">{errors.images}</p>}
             </div>
 
             {/* Checkboxes */}

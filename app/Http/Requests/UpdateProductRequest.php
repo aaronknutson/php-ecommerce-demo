@@ -21,7 +21,8 @@ class UpdateProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        $productId = $this->route('product');
+        $product = $this->route('product');
+        $productId = $product instanceof \App\Models\Product ? $product->id : $product;
 
         return [
             'category_id' => ['required', 'exists:categories,id'],
@@ -33,6 +34,9 @@ class UpdateProductRequest extends FormRequest
             'price' => ['required', 'numeric', 'min:0'],
             'compare_price' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
+            'primary_image' => ['nullable', 'url', 'max:2048'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['url', 'max:2048'],
             'is_active' => ['boolean'],
             'is_featured' => ['boolean'],
         ];
