@@ -64,13 +64,19 @@ echo "MySQL is up - executing migrations and seeding"
 # Run migrations
 php artisan migrate --force --no-interaction
 
-# Only seed if database is empty (check if users table has no records)
-USER_COUNT=$(php artisan tinker --execute="echo App\Models\User::count();")
-if [ "$USER_COUNT" -eq 0 ]; then
-    echo "Database is empty, seeding with demo data..."
-    php artisan db:seed --force --no-interaction
+# Check if users table exists and has records
+TABLE_EXISTS=$(php artisan tinker --execute="echo \Illuminate\Support\Facades\Schema::hasTable('users') ? 'yes' : 'no';")
+if [ "$TABLE_EXISTS" = "yes" ]; then
+    USER_COUNT=$(php artisan tinker --execute="echo App\Models\User::count();")
+    if [ "$USER_COUNT" -eq 0 ]; then
+        echo "Database is empty (users table exists but no records), seeding with demo data..."
+        php artisan db:seed --force --no-interaction
+    else
+        echo "Database already seeded (found $USER_COUNT users), skipping seed..."
+    fi
 else
-    echo "Database already seeded (found $USER_COUNT users), skipping seed..."
+    echo "Fresh database detected, seeding with demo data..."
+    php artisan db:seed --force --no-interaction
 fi
 
 echo "Database setup complete!"
