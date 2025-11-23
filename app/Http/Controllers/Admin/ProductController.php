@@ -28,10 +28,11 @@ class ProductController extends Controller
             })
             ->latest()
             ->paginate(20)
-            ->withQueryString();
+            ->withQueryString()
+            ->through(fn ($product) => ProductResource::make($product)->resolve());
 
         return Inertia::render('Admin/Products/Index', [
-            'products' => ProductResource::collection($products),
+            'products' => $products,
             'filters' => $request->only(['search', 'category_id']),
         ]);
     }
